@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Passenger Traffic Analyzer</title>
+</head>
+<body>
+    <!-- Map container -->
+    <div id="map" style="height: 400px;"></div>
+
+    <!-- Passenger information -->
+    <div class="passenger-info">
+        <h2>Passenger Traffic Analyzer</h2>
+        <div class="dataWindow">
+            <p>Current number of passengers: <span id="currentNumOfPassengers">0</span></p>
+            <p>Total number of passengers: <span id="totalNumOfPassengers">0</span></p>
+        </div>
+
+        <div>
+            <button id="addPassenger">Add Passenger</button>
+            <button id="removePassenger">Remove Passenger</button>
+            <button id="requestLocationPermission">Request Location</button>
+        </div>
+
+        <div>
+            <label for="latitude">Latitude:</label>
+            <input type="number" id="latitude" name="latitude">
+            <label for="longitude">Longitude:</label>
+            <input type="number" id="longitude" name="longitude">
+            <button id="go">Go</button>
+        </div>
+        <button id="showStatistic">Statistics</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize passenger counts
+        let currentNumOfPassengers = 0;
+        let totalNumOfPassengers = 0;
+
+        // Function to update passenger counts
+        function updatePassengerCounts() {
+          document.getElementById("currentNumOfPassengers").textContent =
+            currentNumOfPassengers;
+          document.getElementById("totalNumOfPassengers").textContent =
+            totalNumOfPassengers;
+        }
+
+        document.getElementById("go").addEventListener("click", requestLocation);
+        // Initialize the map
+        let map;
+        let marker;
+
+        function initMap() {
+          map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 41.716667, lng: 44.783333 },
+            zoom: 15,
+          });
+        }
+
+        // Example: Listen for the "Add Passenger" button click
+        document.getElementById("addPassenger").addEventListener("click", () => {
+          // Get the current location (simulated here)
+          const latitude = parseFloat(document.getElementById("latitude").value);
+          const longitude = parseFloat(document.getElementById("longitude").value);
+
+          // Update passenger counts
+          currentNumOfPassengers++;
+          totalNumOfPassengers++;
+
+          // Update the UI
+          updatePassengerCounts();
+        });
+
+        // Example: Listen for the "Remove Passenger" button click
+        document.getElementById("removePassenger").addEventListener("click", () => {
+          // Get the current location (simulated here)
+          const latitude = parseFloat(document.getElementById("latitude").value);
+          const longitude = parseFloat(document.getElementById("longitude").value);
+
+          // Update passenger counts
+          currentNumOfPassengers--;
+
+          // Update the UI
+          updatePassengerCounts();
+        });
+
+        // Function to request user's location
+        function requestLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      // Handle the retrieved location (latitude and longitude)
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // Update the latitude and longitude input fields
+      document.getElementById("latitude").value = latitude;
+      document.getElementById("longitude").value = longitude;
+
+      // Update the map's center to the retrieved location
+      const newCenter = new google.maps.LatLng(latitude, longitude);
+      map.setCenter(newCenter);
+
+      // Remove the existing marker (if it exists)
+      if (marker) {
+        marker.setMap(null);
+      }
+
+      // Create a new marker at the retrieved location
+      marker = new google.maps.Marker({
+        position: newCenter,
+        map: map,
+        title: "Your Location"
+      });
+
+    }, function (error) {
+      // Handle errors if geolocation request fails
+      console.error("Geolocation request failed: " + error.message);
+    });
+  } else {
+    console.error("Geolocation is not supported in this browser.");
+  }
+}
+
+
+        // Add an event listener to the "Request Location" button
+        document.getElementById("requestLocationPermission").addEventListener("click", requestLocation);
+
+        // Implement other functionality for showing statistics and initializing the map here.
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0NkGi6ICvZJXa9sK8tJiCskHwsuTfg88&callback=initMap" async defer></script>
+</body>
+</html>
