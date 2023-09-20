@@ -25,9 +25,7 @@ html, body {
         flex-direction: row;
 }
 
-.dataWindow h2 {
-    
-}
+
 
 .dataWindow p {
     display: flex;
