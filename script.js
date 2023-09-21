@@ -1,6 +1,20 @@
-// Initialize passenger counts
+// Listen for button clicks and call the corresponding functions
+document.getElementById("addPassenger").addEventListener("click", addPassengerMarker);
+document.getElementById("removePassenger").addEventListener("click", removePassengerMarker);
+document.getElementById("go").addEventListener("click", goToCoordinates);
+document.getElementById("requestLocationPermission").addEventListener("click", requestLocation);
+// Initialize 
 let currentNumOfPassengers = 0;
 let totalNumOfPassengers = 0;
+let map;
+let markers = []; 
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 41.716667, lng: 44.783333 },
+    zoom: 13,
+  });
+}
 
 // Function to update passenger counts
 function updatePassengerCounts() {
@@ -10,60 +24,80 @@ function updatePassengerCounts() {
     totalNumOfPassengers;
 }
 
-// Initialize the map
-let map;
-let marker;
-
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 41.716667, lng: 44.783333 },
-    zoom: 15,
+// Function to add a passenger marker (green) to the map
+function addPassengerMarker() {
+  const currentCenter = map.getCenter();
+  const passengerMarker = new google.maps.Marker({
+    position: currentCenter,
+    map: map,
+    title: "Passenger",
+    icon: {
+      url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", 
+      scaledSize: new google.maps.Size(32, 32),
+    },
   });
-}
 
-// Call initMap when the Google Maps API is loaded
-google.maps.event.addDomListener(window, "load", initMap);
-
-// Add an event listener to the "Add Passenger" button
-document.getElementById("addPassenger").addEventListener("click", () => {
-  // Get the current location (simulated here)
-  const latitude = parseFloat(document.getElementById("latitude").value);
-  const longitude = parseFloat(document.getElementById("longitude").value);
-
-  // Update passenger counts
+  markers.push(passengerMarker);
   currentNumOfPassengers++;
   totalNumOfPassengers++;
-
-  // Update the UI
   updatePassengerCounts();
+}
 
-  // Add a marker at the specified coordinates
-  const location = new google.maps.LatLng(latitude, longitude);
-  if (marker) {
-    marker.setMap(null);
-  }
-  marker = new google.maps.Marker({
-    position: location,
-    map: map,
-    title: "Passenger Location",
-  });
-});
+// Function to remove a passenger marker (red) from the map and add a red marker at the current location
+function removePassengerMarker() {
+  if (markers.length > 0) {
+    // Get the current center of the map
+    const currentCenter = map.getCenter();
 
-// Add an event listener to the "Remove Passenger" button
-document.getElementById("removePassenger").addEventListener("click", () => {
-  // Get the current location (simulated here)
-  const latitude = parseFloat(document.getElementById("latitude").value);
-  const longitude = parseFloat(document.getElementById("longitude").value);
+    // Create a new red marker at the current location
+    const redMarker = new google.maps.Marker({
+      position: currentCenter,
+      map: map,
+      title: "Removed Passenger",
+      icon: {
+        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Path to red marker icon
+        scaledSize: new google.maps.Size(32, 32),
+      },
+    });
 
-  // Check if there are passengers to remove
-  if (currentNumOfPassengers > 0) {
-    // Update passenger counts
+    markers.push(redMarker);
     currentNumOfPassengers--;
 
     // Update the UI
     updatePassengerCounts();
   }
-});
+}
+
+// Function to move the map to the specified coordinates and add a blue marker
+function goToCoordinates() {
+  const latitude = parseFloat(document.getElementById("latitude").value);
+  const longitude = parseFloat(document.getElementById("longitude").value);
+
+  if (!isNaN(latitude) && !isNaN(longitude)) {
+    const targetCoordinates = new google.maps.LatLng(latitude, longitude);
+    map.setCenter(targetCoordinates);
+
+    // Remove previous blue marker (if it exists)
+    markers.forEach((marker) => {
+      marker.setMap(null);
+    });
+
+    // Create a new blue marker at the target coordinates
+    const blueMarker = new google.maps.Marker({
+      position: targetCoordinates,
+      map: map,
+      title: "Target Location",
+      icon: {
+        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Path to blue marker icon
+        scaledSize: new google.maps.Size(32, 32),
+      },
+    });
+
+    markers.push(blueMarker);
+  } else {
+    console.error("Invalid latitude or longitude values.");
+  }
+}
 
 // Function to request user's location
 function requestLocation() {
@@ -78,22 +112,27 @@ function requestLocation() {
         document.getElementById("latitude").value = latitude;
         document.getElementById("longitude").value = longitude;
 
-        // Update the map's center to the retrieved location and set an appropriate zoom level
+        // Update the map's center to the retrieved location
         const newCenter = new google.maps.LatLng(latitude, longitude);
         map.setCenter(newCenter);
-        map.setZoom(15); // Set the zoom level to your preference
 
         // Remove the existing marker (if it exists)
-        if (marker) {
+        markers.forEach((marker) => {
           marker.setMap(null);
-        }
+        });
 
         // Create a new marker at the retrieved location
-        marker = new google.maps.Marker({
+        const locationMarker = new google.maps.Marker({
           position: newCenter,
           map: map,
           title: "Your Location",
+          icon: {
+            url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Path to location marker icon
+            scaledSize: new google.maps.Size(32, 32),
+          },
         });
+
+        markers.push(locationMarker);
       },
       function (error) {
         // Handle errors if geolocation request fails
@@ -104,20 +143,3 @@ function requestLocation() {
     console.error("Geolocation is not supported in this browser.");
   }
 }
-
-// Add an event listener to the "Request Location" button
-document
-  .getElementById("requestLocationPermission")
-  .addEventListener("click", requestLocation);
-
-// Add an event listener to the "Go" button to move the map to the specified coordinates
-document.getElementById("go").addEventListener("click", () => {
-  // Get the coordinates from the input fields
-  const latitude = parseFloat(document.getElementById("latitude").value);
-  const longitude = parseFloat(document.getElementById("longitude").value);
-
-  // Move the map to the specified coordinates
-  const newCenter = new google.maps.LatLng(latitude, longitude);
-  map.setCenter(newCenter);
-  map.setZoom(15); // Set the zoom level to your preference
-});
