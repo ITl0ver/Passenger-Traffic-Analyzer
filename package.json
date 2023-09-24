@@ -1,0 +1,37 @@
+{
+  "name": "passanger-traffic-analyzer",
+  "version": "1.0.2",
+  "description": "Passenger-Traffic-Analyzer is a simple prototype for observing passenger traffic, storing data for further statistics and analysis",
+  "main": "script.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ITl0ver/Passenger-Traffic-Analyzer.git"
+  },
+  "keywords": [
+    "statistics",
+    "obtain-data",
+    "traffic",
+    "analyzer",
+    "passenger-traffic-analyzer",
+    "css",
+    "javascrips",
+    "html",
+    "express"
+  ],
+  "author": "ITl0ver",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ITl0ver/Passenger-Traffic-Analyzer/issues"
+  },
+  "homepage": "https://github.com/ITl0ver/Passenger-Traffic-Analyzer#readme",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

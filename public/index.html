@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./stylesheets/reset.css">
+  <link rel="stylesheet" href="./stylesheets/style.css">
+  <title>Passenger Traffic <br> Analyzer</title>
+</head>
+
+<body>
+  <!-- Map container -->
+  <div id="map"></div>
+  <!-- Passenger information -->
+  <div class="passenger-info">
+    <div class="dataWindow">
+      <p>Current number <br> of passengers: <span id="currentNumOfPassengers">0</span></p>
+      <div id="clock">
+        <div id="date"></div>
+        <button id="showStatistic">Statistics</button>
+        <div id="time"></div>
+      </div>
+      <p>Total number <br> of passengers: <span id="totalNumOfPassengers">0</span></p>
+    </div>
+    <div class="clickButtons">
+      <button id="addPassenger">Add Passenger</button>
+      <button id="removePassenger">Remove Passenger</button>
+      <button id="requestLocationPermission">Request Location</button>
+    </div>
+    <div  class="coordinateField">
+      <div>
+          <label for="latitude">Lat:</label>
+          <input type="number" id="latitude" name="latitude">
+     </div> 
+     <div>  
+        <label for="longitude">Lon:</label>
+        <input type="number" id="longitude" name="longitude">
+     </div>
+      <button id="go">-> Go</button>
+    </div>
+      <h2>Passenger Traffic Analyzer</h2>
+  </div>
+  <script src="./javascripts/script.js"></script>
+  <script src="./javascripts/google-maps.js"></script>
+</body>
+
+</html>
