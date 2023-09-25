@@ -4,7 +4,8 @@
   "description": "Passenger-Traffic-Analyzer is a simple prototype for observing passenger traffic, storing data for further statistics and analysis",
   "main": "script.js",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
