@@ -23,7 +23,7 @@ jobs:
           npm run build
 
       - name: Deploy
-        uses: ITl0ver/Passenger-Traffic-Analyzer@v1
+        uses: ITl0ver/Passenger-Traffic-Analyzer@v4.4.3
         with:
           folder: build
           branch: gh-pages
