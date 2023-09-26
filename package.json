@@ -30,7 +30,8 @@
   "homepage": "https://github.com/ITl0ver/Passenger-Traffic-Analyzer#readme",
   "dependencies": {
     "ejs": "^3.1.9",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "gh-pages": "^6.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
