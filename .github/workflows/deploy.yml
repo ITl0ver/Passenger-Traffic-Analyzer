@@ -1,7 +1,5 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -11,6 +9,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref  }}
 
     strategy:
       matrix:
@@ -22,7 +22,24 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm i
-    - run: node server.js
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with: 
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}  
+        restore-keys: | 
+          ${{ runner.os }}-node-
+
+    - run: |
+        sed -i '5\ "homepage': "https://github.com/ITl0ver/Passenger-Traffic-Analyzer", ./package.json
+    - run: npm ci
+    - run: npm run build
+    - run: cp build/index.html build/404.html
+
+    - name: Deploy
+      uses: peaceiris/action-gh-pages@v4
+      if: ${{ github.ref == 'refs/heads.main' }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN  }}
+        publish_dir: ./build      
 
