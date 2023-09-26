@@ -37,7 +37,7 @@ jobs:
     - run: cp build/index.html build/404.html
 
     - name: Deploy
-      uses: peaceiris/action-gh-pages@v4
+      uses: Passenger-Traffic-Analyzer-gh-pages@v4
       if: ${{ github.ref == 'refs/heads.main' }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN  }}
