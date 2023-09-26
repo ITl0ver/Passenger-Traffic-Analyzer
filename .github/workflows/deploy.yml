@@ -31,7 +31,7 @@ jobs:
           ${{ runner.os }}-node-
 
     - run: |
-        sed -i '5\ "homepage': "https://github.com/ITl0ver/Passenger-Traffic-Analyzer", ./package.json
+        sed -i  "homepage": "https://github.com/ITl0ver/Passenger-Traffic-Analyzer", ./package.json
     - run: npm ci
     - run: npm run build
     - run: cp build/index.html build/404.html
